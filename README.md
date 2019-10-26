@@ -1,68 +1,98 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Point of Sales with React
 
-## Available Scripts
+<p align="center">
+  <a href="https://reactjs.org/">
+    <img title="React Redux" src="https://miro.medium.com/max/800/1*bs6W6c6yYS36PcD9joLVtw.png">
+  </a>
+</p>
 
-In the project directory, you can run:
+----
 
-### `npm start`
+## Table of contents
+- [Point of Sales with React](#point-of-sales-with-react)
+  - [Table of contents](#table-of-contents)
+  - [TODO Tasks](#todo-tasks)
+  - [Stacks](#stacks)
+  - [Build Setup](#build-setup)
+  - [Capture](#capture)
+    - [Home](#home)
+    - [Checkout](#checkout)
+    - [CRUD Product](#crud-product)
+    - [CRUD Category](#crud-category)
+    - [CRUD User](#crud-user)
+    - [Recent History](#recent-history)
+    - [Statistic Income and Orders](#statistic-income-and-orders)
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## TODO Tasks
+- [x] CRUD Products via web
+- [x] CRUD Categories via web
+- [x] CRUD Users via web
+- [x] Login and authentication with JWT
+- [x] Filtering product by name and category and etc.
+- [x] Sorting product by newest name and etc.
+- [x] Data Pagination
+- [x] Data Reactive
+- [x] Cart item stored in local storage with redux
+- [x] History orders and income by daily, weekly, monthly and yearly
+- [x] Statistic income and orders
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+## Stacks
+- ReactJS
+- Redux
+- Ant Design
+- ApexChart
+- Axios
 
-### `npm test`
+## Build Setup
+1. Clone repository
+`$ git clone https://github.com/jumaidilfadil/point-of-sales-react.git`
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+2. Install depedencies
+```bash
+# with npm
+$ npm install
 
-### `npm run build`
+# or with yarn
+$ yarn install
+```
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+3. Setup your environment variable in `.env` files (if not exists, create your own).
+```env
+REACT_APP_API_BASEURL = http://localhost:5000
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+4. Available scripts
+```bash
+# start development server
+$ yarn start 
 
-### `npm run eject`
+# built to production mode
+$ yarn build
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## Capture
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Home
+[![View Home]()]()
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+### Checkout
+[![View Checkout]()]()
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### Add Product
+[![View Add Product]()]()
 
-## Learn More
+### Edit Product
+[![View Edit Product]()]()
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Delete Product
+[![View Delete Product]()]()
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Recent History
+[![View Recent History]()]()
 
-### Code Splitting
+### Statistic Income and Orders
+[![View Statistic Income and Orders]()]()
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+---
+Copyright © 2019 Jumaidil Fadillah

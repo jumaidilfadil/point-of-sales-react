@@ -1,25 +1,24 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 import ls from 'local-storage'
+import dateFormat from 'dateformat'
+
+import RupiahFormat from '../../helpers/RupiahFormat'
+
 import '../../App.css'
 
 import logoEmptyCart from '../../coffee.png'
 import CardMenu from '../../components/Card/CardMenu'
 import CardCartItem from '../../components/Card/CardCartItem'
-
-const rupiahFormat = (num) => {
-  return (
-    'Rp. ' +
-    num
-      .toString()
-      .replace('.', ',')
-      .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
-  )
-}
+import AddEditProduct from '../../components/AddEditProduct'
+import CheckoutModal from '../../components/Modal/CheckoutModal'
+import Loading from '../../components/Loading'
+import SuccessModal from '../../components/Modal/SuccessModal'
 
 class Checkout extends Component {
   constructor() {
     super()
+
     this.state = {
       sort: 'name',
       order: 'ASC',
@@ -35,13 +34,16 @@ class Checkout extends Component {
       name: '',
       description: '',
       image: '',
-      id_category: '',
+      id_category: 1,
       price: '',
       stock: '',
       buttonDisabled: false,
       formStatus: 'Add',
       productIdSelected: null,
-      isFilled: 'form-group bmd-form-group'
+
+      invoice: '',
+      username: '',
+      orderDate: ''
     }
   }
 
@@ -53,14 +55,13 @@ class Checkout extends Component {
     }
     
     let url = `http://localhost:5000/api/v1/product?sort=${sort}&order=${order}&page=${page}&limit=${limit}`
-    if(search && search.length >= 3)
-      url += `&search=${search}`
+    search && search.length >= 3 && ( url += `&search=${search}` )
     axios.get(url, header)
       .then(result => {
         const data = result.data.data ? result.data.data : []
         this.setState({
           data,
-          totalPage: result.data.total_page
+          totalPage: result.data.total_page 
         })
       })
       .catch(err => {
@@ -70,6 +71,16 @@ class Checkout extends Component {
 
   componentDidMount() {
     this.getProducts(this.state.sort, this.state.order, this.state.search, this.state.page, this.state.limit)
+
+    var dateNow = new Date()
+    var invoice = dateFormat(dateNow, 'yyyymmddHHMMss')
+    var orderDate = dateFormat(dateNow, 'yyyy-mm-dd HH:MM:ss')
+
+    this.setState({
+      invoice,
+      username: ls.get('username'),
+      orderDate
+    })
   }
 
   getSort = (e) => {
@@ -98,6 +109,9 @@ class Checkout extends Component {
     })
     if(search.length >= 3)
     {
+      this.setState({
+        page: 1
+      })
       this.getProducts(this.state.sort, this.state.order, search, this.state.page, this.state.limit)
     }
     else
@@ -140,7 +154,7 @@ class Checkout extends Component {
   }
 
   pagination = () => {
-    const totalPage = this.state.totalPage
+    var totalPage = this.state.totalPage
     var pageButton = []
     for(let i=1; i<=totalPage; i++)
     {
@@ -241,13 +255,17 @@ class Checkout extends Component {
     {
       return (
         <div class="row">
-          <CardMenu
-            menu={this.state.data}
-            selected={this.state.selectedId}
-            menuClick={(id) => this.menuClickHandler(id)}
-            editButtonClick={(product) => this.editButtonHandler(product)}
-            deleteButtonClick={(id) => this.deleteButtonHandler(id)}
-          />
+          {data!=='' && data!==[] && data !== null ? (
+            <CardMenu
+              menu={this.state.data}
+              selected={this.state.selectedId}
+              menuClick={(id) => this.menuClickHandler(id)}
+              editButtonClick={(product) => this.editButtonHandler(product)}
+              deleteButtonClick={(id) => this.deleteButtonHandler(id)}
+            />
+          ) : (
+            <Loading />
+          )}
         </div>
       )
     }
@@ -266,6 +284,9 @@ class Checkout extends Component {
       this.state.cart.forEach(function(element, i) {
         total += element.price * element.quantity;
       })
+      var ppn = (total * 10) / 100
+      var totalAll = total + ppn
+
       return (
         <>
           <CardCartItem
@@ -276,11 +297,11 @@ class Checkout extends Component {
           <div className="mt-5">
             <p className="font-weight-bold h5">
               Total :
-              <span className="float-right">{rupiahFormat(total)} *</span>
+              <span className="float-right">* {RupiahFormat(total)}</span>
               <br />
               <small>* Not including PPN</small>
             </p>
-            <button type="button" className="btn btn-primary btn-block btn-raised ripple">Checkout</button>
+            <button type="button" data-toggle="modal" data-target="#modalCheckout" style={{cursor: 'pointer'}} className="btn btn-primary btn-block btn-raised ripple">Checkout</button>
             <button
               type="button"
               className="btn btn-danger btn-block btn-raised ripple"
@@ -288,6 +309,16 @@ class Checkout extends Component {
             >
               Cancel
             </button>
+            <CheckoutModal
+              cart={this.state.cart}
+              total={total}
+              ppn={ppn}
+              totalAll={totalAll}
+              invoice={this.state.invoice}
+              username={this.state.username}
+              orderDate={this.state.orderDate}
+              onClickHandler={this.onClickCheckoutHandler}
+            />
           </div>
         </>
       )
@@ -298,9 +329,8 @@ class Checkout extends Component {
         <p className="text-center">
           <img src={logoEmptyCart} className="img-fluid" alt="Empty Cart" style={{maxWidth: '200px'}} />
           <br />
-          <strong>Your cart is empty.</strong>
-          <br />
-          <small className="text-muted">Please add some items from the menu.</small>
+          <h3>Your cart is empty.</h3>
+          <span className="text-muted">Please add some items from the menu.</span>
         </p>
       )
     }
@@ -341,8 +371,6 @@ class Checkout extends Component {
     payload.set('id_category', this.state.id_category)
     payload.set('price', this.state.price)
     payload.set('stock', this.state.stock)
-
-    console.log(payload)
     
     const header = {
       headers: {
@@ -371,32 +399,31 @@ class Checkout extends Component {
       price: product.price,
       stock: product.stock,
       formStatus: 'Edit',
-      productIdSelected: product.id,
-      isFilled: 'form-group bmd-form-group is-filled'
+      productIdSelected: product.id
     })
   }
 
   addProduct = (url, payload, header) => {
     axios.post(url, payload, header)
       .then(response => {
-        var data = [...this.state.data]
-        data.push(response.data.data)
+        var product = [...this.state.data]
+        product.push(response.data.data)
         this.setState({
-          data,
+          data: product,
           name: '',
           description: '',
           image: '',
           id_category: '',
           price: '',
           stock: '',
-          buttonDisabled: false,
-          isFilled: 'form-group bmd-form-group'
+          formStatus: 'Add',
+          buttonDisabled: false
         })
         this.getProducts(this.state.sort, this.state.order, this.state.search, this.state.page, this.state.limit)
         this.closeModalForm()
       })
       .catch(error => {
-        console.log(error);
+        console.log(error)
         this.setState({
           buttonDisabled: false,
         })
@@ -426,8 +453,7 @@ class Checkout extends Component {
           id_category: '',
           price: '',
           stock: '',
-          formStatus: 'Create',
-          isFilled: 'form-group bmd-form-group'
+          formStatus: 'Create'
         })
         this.getProducts(this.state.sort, this.state.order, this.state.search, this.state.page, this.state.limit)
         this.closeModalForm()
@@ -473,13 +499,81 @@ class Checkout extends Component {
       price: '',
       stock: '',
       formStatus: 'Add',
-      buttonDisabled: false,
-      isFilled: 'form-group bmd-form-group'
+      buttonDisabled: false
     })
   }
 
   closeModalForm = () => {
-    document.getElementById('closeModalForm').click();
+    document.getElementById('closeModalForm').click()
+  }
+
+  closeModalCheckout = () => {
+    document.getElementById('closeModalCheckout').click()
+  }
+
+  onClickCheckoutHandler = () => {
+    let url = 'http://localhost:5000/checkout'
+    const header = {
+      headers: {
+        Authorization: `Bearer ${ls.get('token')}`
+      }
+    }
+
+    let product_name = []
+    let price = []
+    let quantity = []
+    for(let i=0; i<this.state.cart.length; i++) {
+      product_name.push(this.state.cart[i].name)
+      price.push(this.state.cart[i].price)
+      quantity.push(this.state.cart[i].quantity)
+    }
+    let payload = {
+      invoice: this.state.invoice,
+      username: this.state.username,
+      date: this.state.orderDate,
+      product_name,
+      price,
+      quantity
+    }
+
+    this.checkout(url, payload, header)
+  }
+
+  checkout = (url, payload, header) => {
+    axios.post(url, payload, header)
+      .then(response => {
+        this.closeModalCheckout()
+
+        var dateNow = new Date()
+        var invoice = dateFormat(dateNow, 'yyyymmddHHMMss')
+        var orderDate = dateFormat(dateNow, 'yyyy-mm-dd HH:MM:ss')
+    
+        this.setState({
+          selectedId: [],
+          cart: [],
+          cartTotal: 0,
+          invoice,
+          orderDate
+        })
+
+        
+        document.getElementById('successModalButton').click()
+      })
+      .catch(error => {
+        console.log(error)
+        this.setState({
+          buttonDisabled: false,
+        })
+      })
+  }
+
+  successModal = (title, message) => {
+    return (
+      <SuccessModal
+        title={title}
+        message={message}
+      />
+    )
   }
   
   render() {
@@ -492,7 +586,7 @@ class Checkout extends Component {
 
             <div class="form-row">
               
-              <div className="form-group col-md-4" style={{paddingTop: '32px'}}>
+              <div className="form-group col-md-4 bmd-form-group bmd-form-group-sm">
                 <label for="search">Search Item Name</label>
                 <input
                   type="name"
@@ -506,7 +600,7 @@ class Checkout extends Component {
 
               <div className="form-group col-md-2">
                 <label for="sort">Sort</label>
-                <select name="sort" id="sort" className="form-control form-control-sm" style={{lineHeight: '2'}} onChange={this.getSort}>
+                <select name="sort" id="sort" className="form-control form-control-sm" onChange={this.getSort}>
                   <option value="name">Name</option>
                   <option value="price">Price</option>
                 </select>
@@ -514,7 +608,7 @@ class Checkout extends Component {
 
               <div className="form-group col-md-2">
                 <label for="order">Order</label>
-                <select name="order" id="order" className="form-control form-control-sm" style={{lineHeight: '2'}} onChange={this.getOrder}>
+                <select name="order" id="order" className="form-control form-control-sm" onChange={this.getOrder}>
                   <option value="ASC">Ascending</option>
                   <option value="DESC">Descending</option>
                 </select>
@@ -522,7 +616,7 @@ class Checkout extends Component {
 
               <div className="form-group col-md-1">
                 <label for="limit">Limit</label>
-                <select name="limit" id="limit" className="form-control form-control-sm" style={{lineHeight: '2'}} onChange={this.getLimit}>
+                <select name="limit" id="limit" className="form-control form-control-sm" onChange={this.getLimit}>
                   <option value="6">6</option>
                   <option value="9">9</option>
                   <option value="12">12</option>
@@ -535,114 +629,21 @@ class Checkout extends Component {
 
             {this.isEmptyItems()}
             {this.pagination()}
-
-            <div class="modal fade" id="modalFormProduct" tabindex="-1" role="dialog" aria-labelledby="modalFormProductLabel" aria-hidden="true">
-              <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="modalFormProductLabel">{this.state.formStatus} Product Item</h5>
-                    <button type="button" id="closeModalForm" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>
-                  <form onSubmit={this.onSubmitHandler}>
-
-                    <div class="modal-body">
-
-                      <div className={this.state.isFilled}>
-                        <label for="name">Name</label>
-                        <input 
-                          type="text" 
-                          name="name"
-                          id="name"
-                          className="form-control"
-                          value={this.state.name}
-                          onChange={this.inputOnChangeHandler}
-                        />
-                      </div>
-
-                      <div className={this.state.isFilled}>
-                        <label for="description">Description</label>
-                        <input 
-                          type="text" 
-                          name="description"
-                          id="description"
-                          className="form-control"
-                          value={this.state.description}
-                          onChange={this.inputOnChangeHandler}
-                        />
-                      </div>
-
-                      <div class="form-group">
-                        <label for="image_file" class="bmd-label-floating">Image</label>
-                        <input type="file" class="form-control-file" name="image_file" id="image_file" onChange={this.inputFileOnChangeHandler} />
-                        <small class="text-muted">The file must be an image in jpg, jpeg, png, or gif format.</small>
-                      </div>
-
-                      <div className={this.state.isFilled}>
-                        <label for="category" class="bmd-label-floating">Category</label>
-                        <select
-                          name="category"
-                          id="category"
-                          className="form-control"
-                          onChange={this.inputOnChangeHandler}
-                          value={this.state.category}
-                          style={{lineHeight: '2'}}
-                        >
-                          <option value="1">Food</option>
-                          <option value="2">Beverage</option>
-                          <option value="3">Dessert</option>
-                        </select>
-                      </div>
-
-                      <div className={this.state.isFilled}>
-                        <label for="price">Price</label>
-                        <input 
-                          type="number" 
-                          name="price"
-                          id="price"
-                          className="form-control"
-                          value={this.state.price}
-                          onChange={this.inputOnChangeHandler}
-                        />
-                      </div>
-
-                      <div className={this.state.isFilled}>
-                        <label for="stock">Stock</label>
-                        <input 
-                          type="number" 
-                          name="stock"
-                          id="stock"
-                          className="form-control"
-                          value={this.state.stock}
-                          onChange={this.inputOnChangeHandler}
-                        />
-                      </div>
-                      
-                    </div>
-
-                    <div class="modal-footer">
-                      <button
-                        type="button"
-                        class="btn btn-danger btn-raised"
-                        data-dismiss="modal"
-                        onClick={()=> console.log('clicked')}
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        type="submit"
-                        class="btn btn-primary btn-raised ml-2"
-                        disabled={this.state.buttonDisabled}
-                      >
-                        Save
-                      </button>
-                    </div>
-
-                  </form>
-                </div>
-              </div>
-            </div>
+            <AddEditProduct
+              formStatus={this.state.formStatus}
+              onSubmitHandler={this.onSubmitHandler}
+              inputOnChangeHandler={this.inputOnChangeHandler}
+              inputFileOnChangeHandler={this.inputFileOnChangeHandler}
+              buttonDisabled={this.state.buttonDisabled}
+              cancelButtonHandler={this.cancelButtonHandler}
+              name={this.state.name}
+              description={this.state.description}
+              image={this.state.image}
+              id_category={this.state.id_category}
+              price={this.state.price}
+              stock={this.state.stock}
+            />
+            {this.successModal('', 'Checkout Succesfully')}
 
           </main>
         </div>
@@ -650,7 +651,7 @@ class Checkout extends Component {
         <div id="cart" className="col-md-4">
 
           <h1 className="h4 text-center mb-4">
-            Cart <span className="badge badge-pill badge-info">{this.state.cartTotal}</span>
+            Cart <span className="badge badge-pill badge-primary">{this.state.cartTotal}</span>
           </h1>
 
           {this.isEmptyCart()}
@@ -661,20 +662,5 @@ class Checkout extends Component {
     )
   }
 }
-
-/*
-
-                      <div className={this.state.isFilled}>
-                        <label for="image">Image</label>
-                        <input 
-                          type="text" 
-                          name="image"
-                          id="image"
-                          className="form-control"
-                          value={this.state.image}
-                          onChange={this.inputOnChangeHandler}
-                        />
-                      </div>
-*/
 
 export default Checkout
