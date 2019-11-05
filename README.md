@@ -83,31 +83,31 @@ $ yarn build
 
 ### Home (Login)
 
-[![View Home/Login]](https://raw.githubusercontent.com/jumaidilfadil/point-of-sales-react/master/screenshots/POS-Home_Login.png)
+![View Home/Login](https://raw.githubusercontent.com/jumaidilfadil/point-of-sales-react/master/screenshots/POS-Home_Login.png)
 
 ### Home (Dashboard)
 
-[![View Home/Dashboard]](https://raw.githubusercontent.com/jumaidilfadil/point-of-sales-react/master/screenshots/POS-Home_Dashboard.png)
+![View Home/Dashboard](https://raw.githubusercontent.com/jumaidilfadil/point-of-sales-react/master/screenshots/POS-Home_Dashboard.png)
 
 ### Cart
 
-[![View Cart]](https://raw.githubusercontent.com/jumaidilfadil/point-of-sales-react/master/screenshots/POS-Cart.png)
+![View Cart](https://raw.githubusercontent.com/jumaidilfadil/point-of-sales-react/master/screenshots/POS-Cart.png)
 
 ### Checkout
 
-[![View Checkout]](https://raw.githubusercontent.com/jumaidilfadil/point-of-sales-react/master/screenshots/POS-Checkout.png)
+![View Checkout](https://raw.githubusercontent.com/jumaidilfadil/point-of-sales-react/master/screenshots/POS-Checkout.png)
 
 ### Add Product
 
-[![View Add Product]](https://raw.githubusercontent.com/jumaidilfadil/point-of-sales-react/master/screenshots/POS-Add_Product_Form.png)
+![View Add Product](https://raw.githubusercontent.com/jumaidilfadil/point-of-sales-react/master/screenshots/POS-Add_Product_Form.png)
 
 ### Edit Product
 
-[![View Edit Product]](https://raw.githubusercontent.com/jumaidilfadil/point-of-sales-react/master/screenshots/POS-Edit_Product_Form.png)
+![View Edit Product](https://raw.githubusercontent.com/jumaidilfadil/point-of-sales-react/master/screenshots/POS-Edit_Product_Form.png)
 
 ### History and Income
 
-[![View History and Income]](https://raw.githubusercontent.com/jumaidilfadil/point-of-sales-react/master/screenshots/POS-History_and_Income.png)
+![View History and Income](https://raw.githubusercontent.com/jumaidilfadil/point-of-sales-react/master/screenshots/POS-History_and_Income.png)
 
 ---
 
