@@ -18,7 +18,7 @@ const cardCartItem = props =>
 						<div className="input-group-prepend">
 							<button
 								type="button"
-								className="btn btn-outline-success btn-sm"
+								className="btn btn-outline-primary btn-sm"
 								onClick={() => props.onClickMinus(item.id)}
 							>
 								<i class="fas fa-minus"></i>
@@ -41,7 +41,7 @@ const cardCartItem = props =>
 						<div className="input-group-prepend">
 							<button
 								type="button"
-								className="btn btn-outline-success btn-sm"
+								className="btn btn-outline-primary btn-sm"
 								onClick={() => props.onClickPlus(item.id)}
 							>
 								<i class="fas fa-plus"></i>

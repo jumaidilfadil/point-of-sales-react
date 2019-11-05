@@ -2,11 +2,8 @@ import React, { Component } from 'react'
 import axios from 'axios'
 import ls from 'local-storage'
 import dateFormat from 'dateformat'
-
 import RupiahFormat from '../../helpers/RupiahFormat'
-
 import '../../App.css'
-
 import logoEmptyCart from '../../coffee.png'
 import CardMenu from '../../components/Card/CardMenu'
 import CardCartItem from '../../components/Card/CardCartItem'
@@ -14,6 +11,7 @@ import AddEditProduct from '../../components/AddEditProduct'
 import CheckoutModal from '../../components/Modal/CheckoutModal'
 import Loading from '../../components/Loading'
 import SuccessModal from '../../components/Modal/SuccessModal'
+import { API } from '../../configs/api'
 
 class Checkout extends Component {
   constructor() {
@@ -30,10 +28,12 @@ class Checkout extends Component {
       selectedId: [],
       cart: [],
       cartTotal: 0,
+      isLoadingData: false,
 
       name: '',
       description: '',
       image: '',
+      imageValue: '',
       id_category: 1,
       price: '',
       stock: '',
@@ -48,24 +48,27 @@ class Checkout extends Component {
   }
 
   getProducts = (sort, order, search, page, limit) => {
+    this.setState({ isLoadingData: true })
+
     const header = {
       headers: {
         Authorization: `Bearer ${ls.get('token')}`
       }
     }
-    
-    let url = `http://localhost:5000/api/v1/product?sort=${sort}&order=${order}&page=${page}&limit=${limit}`
-    search && search.length >= 3 && ( url += `&search=${search}` )
+    let url = `${API.baseUrl}/api/v1/product?sort=${sort}&order=${order}&page=${page}&limit=${limit}`
+    search && search.length >= 1 && ( url += `&search=${search}` )
     axios.get(url, header)
       .then(result => {
-        const data = result.data.data ? result.data.data : []
+        let data = result.data.data ? result.data.data : []
         this.setState({
           data,
-          totalPage: result.data.total_page 
+          totalPage: result.data.total_page,
+          isLoadingData: false
         })
       })
       .catch(err => {
         console.log(err)
+        this.setState({ isLoadingData: false })
       })
   }
 
@@ -101,23 +104,14 @@ class Checkout extends Component {
     this.getProducts(this.state.sort, order, this.state.search, this.state.page, this.state.limit)
   }
 
-  getSearch = (e) => {
+  getSearch = async (e) => {
     e.preventDefault()
-    let search = e.target.value
-    this.setState({
-      search
+    let search = await e.target.value
+    await this.setState({
+      search,
+      page: 1
     })
-    if(search.length >= 3)
-    {
-      this.setState({
-        page: 1
-      })
-      this.getProducts(this.state.sort, this.state.order, search, this.state.page, this.state.limit)
-    }
-    else
-    {
-      this.getProducts(this.state.sort, this.state.order, '', this.state.page, this.state.limit)
-    }
+    this.getProducts(this.state.sort, this.state.order, this.state.search, this.state.page, this.state.limit)
   }
 
   getLimit = (e) => {
@@ -250,30 +244,37 @@ class Checkout extends Component {
   }
 
   isEmptyItems = () => {
-    let data = [...this.state.data]
-    if(data && data !== undefined && data.length >= 1)
-    {
+    if( this.state.isLoadingData === true ) {
       return (
-        <div class="row">
-          {data!=='' && data!==[] && data !== null ? (
-            <CardMenu
-              menu={this.state.data}
-              selected={this.state.selectedId}
-              menuClick={(id) => this.menuClickHandler(id)}
-              editButtonClick={(product) => this.editButtonHandler(product)}
-              deleteButtonClick={(id) => this.deleteButtonHandler(id)}
-            />
-          ) : (
-            <Loading />
-          )}
+        <div class="text-center my-4">
+          <div class="spinner-border text-primary" role="status">
+            <span class="sr-only">Loading...</span>
+          </div>
         </div>
       )
-    }
-    else
-    {
-      return (
-        <h2 className="h5 text-center">Items not found.</h2>
-      )
+    } else {
+      if(this.state.data !== undefined && this.state.data !== null) {
+        let data = [...this.state.data]
+        return (
+          <div class="row">
+            {data!=='' && data!==[] && data !== null ? (
+              <CardMenu
+                menu={this.state.data}
+                selected={this.state.selectedId}
+                menuClick={(id) => this.menuClickHandler(id)}
+                editButtonClick={(product) => this.editButtonHandler(product)}
+                deleteButtonClick={(id) => this.deleteButtonHandler(id)}
+              />
+            ) : (
+              <Loading />
+            )}
+          </div>
+        )
+      } else {
+        return (
+          <h2 className="h5 text-center">Items not found.</h2>
+        )
+      }
     }
   }
 
@@ -355,7 +356,8 @@ class Checkout extends Component {
   }
   inputFileOnChangeHandler = (e) => {
     this.setState({
-      image: e.target.files[0]
+      image: e.target.files[0],
+      imageValue: e.target.value
     })
   }
   onSubmitHandler = (e) => {
@@ -379,14 +381,11 @@ class Checkout extends Component {
       }
     }
 
-    if(this.state.formStatus === 'Add')
-    {
-      url = 'http://localhost:5000/api/v1/product'
+    if (this.state.formStatus === 'Add') {
+      url = `${API.baseUrl}/api/v1/product`
       this.addProduct(url, payload, header)
-    }
-    else
-    {
-      url = `http://localhost:5000/api/v1/product/${this.state.productIdSelected}`
+    } else {
+      url = `${API.baseUrl}/api/v1/product/${this.state.productIdSelected}`
       this.editProduct(url, payload, header)
     }
   }
@@ -413,6 +412,7 @@ class Checkout extends Component {
           name: '',
           description: '',
           image: '',
+          imageValue: '',
           id_category: '',
           price: '',
           stock: '',
@@ -450,6 +450,7 @@ class Checkout extends Component {
           name: '',
           description: '',
           image: '',
+          imageValue: '',
           id_category: '',
           price: '',
           stock: '',
@@ -469,7 +470,7 @@ class Checkout extends Component {
   deleteButtonHandler = (id) => {
     if(window.confirm('Are you sure to delete this data?'))
     {
-      var url = `http://localhost:5000/api/v1/product/${id}`
+      var url = `${API.baseUrl}/api/v1/product/${id}`
       const header = {
         headers: {
           Authorization: `Bearer ${ls.get('token')}`
@@ -495,6 +496,7 @@ class Checkout extends Component {
       name: '',
       description: '',
       image: '',
+      imageValue: '',
       id_category: '',
       price: '',
       stock: '',
@@ -512,7 +514,7 @@ class Checkout extends Component {
   }
 
   onClickCheckoutHandler = () => {
-    let url = 'http://localhost:5000/checkout'
+    let url = `${API.baseUrl}/checkout`
     const header = {
       headers: {
         Authorization: `Bearer ${ls.get('token')}`
@@ -639,6 +641,7 @@ class Checkout extends Component {
               name={this.state.name}
               description={this.state.description}
               image={this.state.image}
+              imageValue={this.state.imageValue}
               id_category={this.state.id_category}
               price={this.state.price}
               stock={this.state.stock}

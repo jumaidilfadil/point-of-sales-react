@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Link, Redirect } from 'react-router-dom'
 import axios from 'axios'
 import ls from 'local-storage'
-
+import { API } from '../configs/api'
 import backgroundImage from './4.svg'
 import '../login.css'
 
@@ -43,8 +43,8 @@ class Login extends Component {
 		e.preventDefault()
 		this.setState({ buttonDisabled: true })
 
-		var url = 'http://localhost:5000/user/login'
-		var payload = {
+		const url = `${API.baseUrl}/user/login`
+		const payload = {
 			username: this.state.username,
 			password: this.state.password
 		}
@@ -52,7 +52,6 @@ class Login extends Component {
 		axios
 			.post(url, payload)
 			.then(response => {
-				console.log(response)
 				let status = response.data.status
 				if (status === 200) {
 					ls.set('username', response.data.data.username)
@@ -126,7 +125,16 @@ class Login extends Component {
 												type="submit"
 												disabled={this.state.buttonDisabled}
 											>
-												Login
+												{this.state.buttonDisabled === true ? (
+													<div
+														class="spinner-border text-light spinner-border-sm"
+														role="status"
+													>
+														<span class="sr-only">Loading...</span>
+													</div>
+												) : (
+													<>Login</>
+												)}
 											</button>
 										</div>
 									</div>

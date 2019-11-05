@@ -58,6 +58,8 @@ const AddEditProduct = props => (
 								class="form-control-file"
 								name="image_file"
 								id="image_file"
+								files={props.image}
+								value={props.imageValue}
 								onChange={props.inputFileOnChangeHandler}
 							/>
 							<small class="text-muted">
@@ -118,7 +120,16 @@ const AddEditProduct = props => (
 							class="btn btn-primary btn-raised ml-2"
 							disabled={props.buttonDisabled}
 						>
-							Save
+							{props.buttonDisabled === true ? (
+								<div
+									class="spinner-border text-light spinner-border-sm"
+									role="status"
+								>
+									<span class="sr-only">Loading...</span>
+								</div>
+							) : (
+								<>Save</>
+							)}
 						</button>
 					</div>
 				</form>

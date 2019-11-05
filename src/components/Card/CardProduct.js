@@ -1,7 +1,8 @@
 import React from 'react'
 import RupiahFormat from '../../helpers/RupiahFormat'
+import { API } from '../../configs/api'
 
-const imgSrc = 'http://localhost:5000/uploads/'
+const imgSrc = `${API.baseUrl}/uploads/`
 
 const cardProduct = props => (
 	<div class="col-sm-6 col-md-4 mb-4" key={props.cardProduct.id}>

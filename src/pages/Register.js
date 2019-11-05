@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Link, Redirect } from 'react-router-dom'
 import axios from 'axios'
+import { API } from '../configs/api'
 
 import backgroundImage from './6.svg'
 import '../login.css'
@@ -45,7 +46,7 @@ class Register extends Component {
 		e.preventDefault()
 		this.setState({ buttonDisabled: true })
 
-		var url = 'http://localhost:5000/user/register'
+		var url = `${API.baseUrl}/user/register`
 		var payload = {
 			username: this.state.username,
 			password: this.state.password
