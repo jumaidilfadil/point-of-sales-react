@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://reactjs.org/">
-    <img title="React" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9Ii0xMS41IC0xMC4yMzE3NCAyMyAyMC40NjM0OCI+CiAgPHRpdGxlPlJlYWN0IExvZ288L3RpdGxlPgogIDxjaXJjbGUgY3g9IjAiIGN5PSIwIiByPSIyLjA1IiBmaWxsPSIjNjFkYWZiIi8+CiAgPGcgc3Ryb2tlPSIjNjFkYWZiIiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiPgogICAgPGVsbGlwc2Ugcng9IjExIiByeT0iNC4yIi8+CiAgICA8ZWxsaXBzZSByeD0iMTEiIHJ5PSI0LjIiIHRyYW5zZm9ybT0icm90YXRlKDYwKSIvPgogICAgPGVsbGlwc2Ugcng9IjExIiByeT0iNC4yIiB0cmFuc2Zvcm09InJvdGF0ZSgxMjApIi8+CiAgPC9nPgo8L3N2Zz4K" height="150" />
+    <img title="React" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/1200px-React-icon.svg.png" height="150" />
   </a>
 </p>
 
@@ -14,15 +14,17 @@
   - [Table of contents](#table-of-contents)
   - [TODO Tasks](#todo-tasks)
   - [Stacks](#stacks)
+  - [API](#api)
   - [Build Setup](#build-setup)
   - [Capture](#capture)
-    - [Home](#home)
+    - [Home (Login)](#home-login)
+    - [Home (Dashboard)](#home-dashboard)
+    - [Cart](#cart)
     - [Checkout](#checkout)
-    - [CRUD Product](#crud-product)
-    - [CRUD Category](#crud-category)
-    - [CRUD User](#crud-user)
-    - [Recent History](#recent-history)
-    - [Statistic Income and Orders](#statistic-income-and-orders)
+    - [Add Product](#add-product)
+    - [Edit Product](#edit-product)
+    - [History and Income](#history-and-income)
+  - [License](#license)
 
 ## TODO Tasks
 
@@ -81,32 +83,35 @@ $ yarn build
 
 ### Home (Login)
 
-[![View Home/Login]]()
+[![View Home/Login]](https://raw.githubusercontent.com/jumaidilfadil/point-of-sales-react/master/screenshots/POS-Home_Login.png)
 
 ### Home (Dashboard)
 
-[![View Home/Dashboard]]()
+[![View Home/Dashboard]](https://raw.githubusercontent.com/jumaidilfadil/point-of-sales-react/master/screenshots/POS-Home_Dashboard.png)
 
 ### Cart
 
-[![View Checkout]]()
+[![View Cart]](https://raw.githubusercontent.com/jumaidilfadil/point-of-sales-react/master/screenshots/POS-Cart.png)
 
 ### Checkout
 
-[![View Checkout]]()
+[![View Checkout]](https://raw.githubusercontent.com/jumaidilfadil/point-of-sales-react/master/screenshots/POS-Checkout.png)
 
 ### Add Product
 
-[![View Add Product]]()
+[![View Add Product]](https://raw.githubusercontent.com/jumaidilfadil/point-of-sales-react/master/screenshots/POS-Add_Product_Form.png)
 
 ### Edit Product
 
-[![View Edit Product]]()
+[![View Edit Product]](https://raw.githubusercontent.com/jumaidilfadil/point-of-sales-react/master/screenshots/POS-Edit_Product_Form.png)
 
 ### History and Income
 
-[![View Recent History]]()
+[![View History and Income]](https://raw.githubusercontent.com/jumaidilfadil/point-of-sales-react/master/screenshots/POS-History_and_Income.png)
 
 ---
 
-Copyright © 2019 Jumaidil Fadillah
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.  
+Copyright &copy; [Jumaidil Fadillah](https://github.com/jumaidilfadil)
