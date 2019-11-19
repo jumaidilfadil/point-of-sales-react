@@ -2,6 +2,7 @@
   "name": "point-of-sales-react",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://ta.mypawcraft.com/pos",
   "dependencies": {
     "axios": "^0.19.0",
     "chart.js": "^2.9.2",

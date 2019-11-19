@@ -55,7 +55,7 @@ class Checkout extends Component {
         Authorization: `Bearer ${ls.get('token')}`
       }
     }
-    let url = `${API.baseUrl}/api/v1/product?sort=${sort}&order=${order}&page=${page}&limit=${limit}`
+    let url = `${API.baseUrl}/product?sort=${sort}&order=${order}&page=${page}&limit=${limit}`
     search && search.length >= 1 && ( url += `&search=${search}` )
     axios.get(url, header)
       .then(result => {
@@ -382,10 +382,10 @@ class Checkout extends Component {
     }
 
     if (this.state.formStatus === 'Add') {
-      url = `${API.baseUrl}/api/v1/product`
+      url = `${API.baseUrl}/product`
       this.addProduct(url, payload, header)
     } else {
-      url = `${API.baseUrl}/api/v1/product/${this.state.productIdSelected}`
+      url = `${API.baseUrl}/product/${this.state.productIdSelected}`
       this.editProduct(url, payload, header)
     }
   }
@@ -470,7 +470,7 @@ class Checkout extends Component {
   deleteButtonHandler = (id) => {
     if(window.confirm('Are you sure to delete this data?'))
     {
-      var url = `${API.baseUrl}/api/v1/product/${id}`
+      var url = `${API.baseUrl}/product/${id}`
       const header = {
         headers: {
           Authorization: `Bearer ${ls.get('token')}`
