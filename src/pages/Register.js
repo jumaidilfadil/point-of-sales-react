@@ -128,8 +128,17 @@ class Register extends Component {
 								</div>
 								<div class="row mt-3">
 									<div class="col">
-										<button class="btn btn-primary btn-raised" type="submit">
-											Register
+										<button class="btn btn-primary btn-raised" type="submit" disabled={this.state.buttonDisabled}>
+											{this.state.buttonDisabled === true ? (
+												<div
+													class="spinner-border text-light spinner-border-sm"
+													role="status"
+												>
+													<span class="sr-only">Loading...</span>
+												</div>
+											) : (
+												<>Login</>
+											)}
 										</button>
 									</div>
 								</div>
