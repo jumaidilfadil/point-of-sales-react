@@ -584,7 +584,7 @@ class Checkout extends Component {
 
         <div className="col-md-8">
           <main role="main">
-            <h1 className="h4 text-center mb-3">Items Menu</h1>
+            <h1 className="h4 text-center mb-3 title">Items Menu</h1>
 
             <div class="form-row">
               

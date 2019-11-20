@@ -2,12 +2,16 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 
 class Navbar extends Component {
+  constructor(props) {
+    super(props)
+  }
+
   render() {
     return (
       <header>
         <nav className="navbar navbar-expand fixed-top dashboard">
 
-          <button type="button" id="sidebarCollapse" className="btn">
+          <button type="button" id="sidebarCollapse" className="btn" onClick={() => this.props.onClickSidebarCollapse(!this.props.sidebarActive)}>
             <i className="fas fa-bars"></i>
           </button>
 

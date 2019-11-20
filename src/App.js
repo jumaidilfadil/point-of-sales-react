@@ -9,7 +9,7 @@ import Logout from './pages/Logout'
 class App extends Component {
 	render() {
 		return (
-			<Router>
+			<Router basename="/pos">
 				<Route path="/" exact component={Login} />
 				<Route path="/register" component={Register} />
 				<Route path="/dashboard" exact component={Dashboard}></Route>

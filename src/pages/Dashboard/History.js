@@ -226,7 +226,7 @@ class Wrapper extends Component {
 
 		return (
 			<>
-				<h1 className="h2 text-center mb-4">History</h1>
+				<h1 className="h2 text-center mb-4 title">History</h1>
 
 				<div class="row mb-4">
 					<div class="col-md-4">

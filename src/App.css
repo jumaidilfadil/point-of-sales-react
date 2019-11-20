@@ -458,7 +458,7 @@ footer.footer a {
 	}
 
 	#sidebar .components {
-		padding: 20px 0;
+		padding: 50px 0;
 	}
 	#sidebar .components ul {
 		list-style: none;
@@ -472,6 +472,10 @@ footer.footer a {
 
 	a[data-toggle='collapse'] {
 		position: relative;
+	}
+
+	.title {
+		padding-top: 10px;
 	}
 }
 /* -------- Sidebar Collapse Mobie - AKHIR -------- */

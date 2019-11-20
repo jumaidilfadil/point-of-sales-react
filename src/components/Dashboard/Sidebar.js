@@ -3,11 +3,15 @@ import { Link } from 'react-router-dom';
 import './ripple.css'
 
 class Sidebar extends Component {
+  constructor(props) {
+    super(props)
+  }
+
   render() {
     return (
-      <nav id="sidebar" className="dashboard active">
+      <nav id="sidebar" className={`dashboard${this.props.active === true && ' active'}`}>
 
-        <div id="dismiss">
+        <div id="dismiss" onClick={() => this.props.onClickDismiss(false)}>
           <i className="fas fa-times"></i>
         </div>
 
@@ -40,12 +44,5 @@ class Sidebar extends Component {
     )
   }
 }
-
-/*
-<Link to="/dashboard/products">
-  <i className="fas fa-plus text-success"></i>
-  <span>Products</span>
-</Link>
-*/
 
 export default Sidebar
