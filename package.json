@@ -5,7 +5,7 @@
   "homepage": "https://ta.mypawcraft.com/pos",
   "dependencies": {
     "axios": "^0.19.0",
-    "chart.js": "^2.9.2",
+    "chart.js": "^2.9.4",
     "dateformat": "^3.0.3",
     "dotenv": "^8.2.0",
     "jquery": "^3.4.1",
